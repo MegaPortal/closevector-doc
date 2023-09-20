@@ -56,7 +56,7 @@ async function walk(dir: string): Promise<string[]> {
         throw new Error("ACCESS_KEY or SECRET not set");
     }
 
-    console.log("ACCESS_KEY", ACCESS_KEY);
+    console.log("inject.ts", "ACCESS_KEY", ACCESS_KEY);
 
     const dirPath = path.join(__dirname, '../docs');
 
@@ -65,7 +65,7 @@ async function walk(dir: string): Promise<string[]> {
 
     const documents: Document[] = [];
 
-    console.log("processing", mdFiles.length, "files");
+    console.log("inject.ts", "processing", mdFiles.length, "files");
 
     for (const file of mdFiles) {
         const content = await fs.readFile(file, 'utf-8');
@@ -86,7 +86,7 @@ async function walk(dir: string): Promise<string[]> {
         documents.push(document);
     }
 
-    console.log("creating index");
+    console.log("inject.ts", "creating index");
 
     const vectorStore = await HNSWLib.fromDocuments(
         documents,
@@ -96,8 +96,8 @@ async function walk(dir: string): Promise<string[]> {
         })
     );
 
-    console.log("index created");
-    console.log("indexing documents");
+    console.log("inject.ts", "index created");
+    console.log("inject.ts", "indexing documents");
 
     let uuid = await upsertIndex(vectorStore, {
         description: '',
@@ -113,7 +113,7 @@ async function walk(dir: string): Promise<string[]> {
     console.log("uuid", uuid)
 
     if (!CLOSEVECTOR_FILE_ID) {
-        console.log("updating .env.local");
+        console.log("inject.ts", "updating .env.local");
         // appending CLOSEVECTOR_FILE_ID="${uuid}" to file .env.local
         const envFilePath = path.join(__dirname, '../.env.local');
         const envFileContent = await fs.readFile(envFilePath, 'utf-8');
@@ -121,6 +121,6 @@ async function walk(dir: string): Promise<string[]> {
         await fs.writeFile(envFilePath, newEnvFileContent);
     }
 
-    console.log("done");
+    console.log("inject.ts", "done");
 
 })();

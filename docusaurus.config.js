@@ -5,8 +5,8 @@ let ACCESS_KEY = process.env.CLOSEVECTOR_ACCESS_KEY;
 let SECRET = process.env.CLOSEVECTOR_SECRET;
 let CLOSEVECTOR_FILE_ID = process.env.CLOSEVECTOR_FILE_ID;
 
-console.log("ACCESS_KEY: " + ACCESS_KEY);
-console.log("CLOSEVECTOR_FILE_ID: " + CLOSEVECTOR_FILE_ID);
+console.log("docusaurus.config.js", "ACCESS_KEY FROM ENV: " + ACCESS_KEY);
+console.log("docusaurus.config.js", "CLOSEVECTOR_FILE_ID FROM ENV: " + CLOSEVECTOR_FILE_ID);
 
 const dotenv = require('dotenv');
 dotenv.config();
