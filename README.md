@@ -1,6 +1,6 @@
 # Website
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+This website is built using [Docusaurus 2](https://docusaurus.io/), you can visit the website at [closevector-docs](https://closevector-docs.getmegaportal.com/).
 
 ### Generate your first access key
 
