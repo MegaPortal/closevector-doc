@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CommandPalette, { filterItems, getItemIndex } from "react-cmdk";
 import { useState } from "react";
 import Link from "@docusaurus/Link";
@@ -41,18 +41,32 @@ const IconCommand = () => {
     );
 };
 
-const IconK = () => {
+const IconLoading = () => {
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 320 512"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
         >
             <path
                 fill="currentColor"
-                d="M311 86.3c12.3-12.7 12-32.9-.7-45.2s-32.9-12-45.2.7l-155.2 160L64 249V64c0-17.7-14.3-32-32-32S0 46.3 0 64v384c0 17.7 14.3 32 32 32s32-14.3 32-32V341l64.7-66.7l133 192c10.1 14.5 30 18.1 44.5 8.1s18.1-30 8.1-44.5L174.1 227.4L311 86.3z"
+                d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
+                opacity=".5"
             />
+            <path
+                fill="currentColor"
+                d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z"
+            >
+                <animateTransform
+                    attributeName="transform"
+                    dur="1s"
+                    from="0 12 12"
+                    repeatCount="indefinite"
+                    to="360 12 12"
+                    type="rotate"
+                />
+            </path>
         </svg>
     );
 };
@@ -64,8 +78,8 @@ export class CustomEmbedding extends CloseVectorEmbeddings {
             secret: "",
         });
         this.config = {
-            key: fields.key
-        }
+            key: fields.key,
+        };
     }
 
     async embeddingWithRetry(textList) {
@@ -125,6 +139,10 @@ export const useDownloader = function (customEmbeddings) {
         downloading = false;
     };
 
+    useEffect(async () => {
+        await HNSWLib.imports();
+    }, []);
+
     return { lib, downloadProgress, downloadFile };
 };
 
@@ -158,6 +176,7 @@ export default function SearchBarWrapper(props) {
     const [fetchError, setFetchError] = useState(null);
     const [isLibLoading, setIsLibLoading] = useState(false);
     const [results, setResults] = useState([]);
+    const [searching, setSearching] = useState(false);
     const history = useHistory();
 
     const {
@@ -173,9 +192,14 @@ export default function SearchBarWrapper(props) {
     function searchChangeCallback(search) {
         setSearch(search);
         if (lib) {
-            searchWithQuery(lib, search).then((results) => {
-                setResults(results);
-            });
+            setSearching(true);
+            searchWithQuery(lib, search)
+                .then((results) => {
+                    setResults(results);
+                })
+                .finally(() => {
+                    setSearching(false);
+                });
         }
     }
 
@@ -218,38 +242,63 @@ export default function SearchBarWrapper(props) {
         })();
     }, [downloadFile, fetchError, isLibLoading, lib]);
 
-    const filteredItems = results?.length
+    const filteredItems = searching
         ? [
-            {
-                heading: "Results",
-                id: "results",
-                items: (results || []).map((r, index) => {
-                    return {
-                        id: index,
-                        // width adjusted
-                        children: (
-                            <Link to={"/docs" + r?.metadata?.url.replace(/.md$/, "")}>
-                                <div className="w-full rounded-lg bg-gradient-to-br from-indigo-900 via-indigo-800 to-indigo-400 p-4 border-t border-indigo-500 border-b border-indigo-500">
-                                    <h2 className="text-lg font-semibold leading-tight text-white">
-                                        <b>{r?.metadata?.header}</b>
-                                    </h2>
-                                    <p className="text-sm text-white/80 font-medium mt-1">
-                                        <ReactMarkdown children={r?.metadata?.description} />
-                                    </p>
-                                </div>
-                            </Link>
-                        ),
-                        showType: false,
-                        // icon: 'RectangleStackIcon',
-                        closeOnSelect: false,
-                        onClick: () => {
-                            history.push("/docs" + r?.metadata?.url.replace(/.md$/, ""));
-                            setOpen(false);
-                        },
-                    };
-                }),
-            },
-        ]
+              {
+                  heading: "Loading",
+                  id: "loading",
+                  items: [
+                      {
+                          id: 1,
+                          children: `searching from ${lib.index.getCurrentCount()} documents`,
+                          showType: false,
+                      },
+                  ],
+              },
+          ]
+        : results?.length
+        ? [
+              {
+                  heading: "Results",
+                  id: "results",
+                  items: (results || []).map((r, index) => {
+                      return {
+                          id: index,
+                          // width adjusted
+                          children: (
+                              <Link
+                                  to={
+                                      "/docs" +
+                                      r?.metadata?.url.replace(/.md$/, "")
+                                  }
+                              >
+                                  <div className="w-full rounded-lg bg-gradient-to-br from-indigo-900 via-indigo-800 to-indigo-400 p-4 border-t border-indigo-500 border-b border-indigo-500">
+                                      <h2 className="text-lg font-semibold leading-tight text-white">
+                                          <b>{r?.metadata?.header}</b>
+                                      </h2>
+                                      <p className="text-sm text-white/80 font-medium mt-1">
+                                          <ReactMarkdown
+                                              children={
+                                                  r?.metadata?.description
+                                              }
+                                          />
+                                      </p>
+                                  </div>
+                              </Link>
+                          ),
+                          showType: false,
+                          // icon: 'RectangleStackIcon',
+                          closeOnSelect: false,
+                          onClick: () => {
+                              history.push(
+                                  "/docs" + r?.metadata?.url.replace(/.md$/, "")
+                              );
+                              setOpen(false);
+                          },
+                      };
+                  }),
+              },
+          ]
         : [];
 
     return (
@@ -274,7 +323,7 @@ export default function SearchBarWrapper(props) {
                         display: "flex",
                     }}
                 >
-                    <IconSearch />
+                    {isLibLoading ? <IconLoading /> : <IconSearch />}
                 </span>
                 <span
                     style={{
@@ -283,7 +332,7 @@ export default function SearchBarWrapper(props) {
                         color: "var(--ifm-navbar-link-color)",
                     }}
                 >
-                    {isLibLoading ? "Loading" : "Search"}
+                    Search
                 </span>
                 <span
                     style={{
@@ -311,7 +360,10 @@ export default function SearchBarWrapper(props) {
                 <CommandPalette.Page id="root">
                     {filteredItems.length ? (
                         filteredItems.map((list) => (
-                            <CommandPalette.List key={list.id} heading={list.heading}>
+                            <CommandPalette.List
+                                key={list.id}
+                                heading={list.heading}
+                            >
                                 {list.items.map(({ id, ...rest }) => (
                                     <CommandPalette.ListItem
                                         key={id}
@@ -324,10 +376,6 @@ export default function SearchBarWrapper(props) {
                     ) : (
                         <CommandPalette.FreeSearchAction />
                     )}
-                </CommandPalette.Page>
-
-                <CommandPalette.Page id="projects">
-                    {/* Projects page */}
                 </CommandPalette.Page>
             </CommandPalette>
         </>
