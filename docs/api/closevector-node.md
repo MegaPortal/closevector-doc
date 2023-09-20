@@ -1,0 +1,108 @@
+---
+sidebar_position: 2
+---
+
+# Closevector Node
+
+`closevector-node` is a Node.js library, which means it is designed to be used with Node.js applications. It provides functionality for embedding texts, adding documents and vectors, performing similarity searches, and other operations related to CloseVector. Additionally, it offers IO functions for uploading, updating, and retrieving indices, as well as various utility functions and constants.
+
+## Installation
+
+To install the `closevector-node` library, run the following command:
+
+```bash
+npm install closevector-node
+```
+
+for more information, checkout [closevector-node](https://www.npmjs.com/package/closevector-node).
+
+## CloseVectorEmbeddings
+
+### Interface: `CloseVectorEmbeddingsParams`
+- **Inherits**: `EmbeddingsParams` from `langchain/embeddings/base`
+- **Properties**:
+  - `timeout?: number`: Optional timeout for requests.
+  - `batchSize?: number`: Maximum number of documents to embed in a single request (limited by the OpenAI API to a max of 2048).
+  - `stripNewLines?: boolean`: Option to remove new lines from the input text.
+
+### Class: `CloseVectorEmbeddings`
+- **Inherits**: `Embeddings` from `langchain/embeddings/base`
+- **Class Fields**:
+  - `batchSize`: Default is 512, specifies the max number of texts to embed in one batch.
+  - `stripNewLines`: Default is true, specifies whether to strip new lines from input texts.
+  - `timeout`: Optional timeout for HTTP requests.
+  - `config`: An object containing `key` and `secret` for API authentication.
+  
+- **Constructor**:
+  - Takes an object of type `Partial<CloseVectorEmbeddingsParams>` and additional properties `key` and `secret`.
+
+- **Methods**:
+  - `async embedDocuments(texts: string[]): Promise<number[][]>`: Embeds an array of texts and returns a 2D array of numbers (embeddings).
+  - `async embedQuery(text: string): Promise<number[]>`: Embeds a single text and returns an array of numbers (embedding).
+  - `private async embeddingWithRetry(textList: string[]): Promise<any>`: A private method for embedding a list of texts. Called internally by `embedDocuments` and `embedQuery`.
+
+## HNSWLib
+### Interfaces
+
+1. **HNSWLibBase**
+   - `space: SpaceName`: Specifies the vector space.
+   - `numDimensions?: number`: Optional, number of dimensions for the vector space.
+
+2. **HNSWLibArgs**: Extends `HNSWLibBase`
+   - `docstore?: SynchronousInMemoryDocstore`: Optional, type of document store.
+   - `index?: HierarchicalNSWT`: Optional, type of index.
+
+### Class `HNSWLib`
+
+1. **HNSWLib**: Extends `SaveableVectorStore`
+   - `constructor(embeddings: Embeddings, args: HNSWLibArgs)`: Constructor
+   - `async addDocuments(documents: Document[]): Promise<void>`: Adds documents
+   - `async addVectors(vectors: number[][], documents: Document[])`: Adds vectors
+   - `async similaritySearchVectorWithScore(query: number[], k: number, filter?: this["FilterType"])`: Performs a similarity search
+   - `async delete(params: { directory: string })`: Deletes files in a directory
+   - `async save(directory: string)`: Saves the current state
+   - `static async load(directory: string, embeddings: Embeddings)`: Static method to load saved state
+   - `static async fromTexts(texts: string[], metadatas: object[] | object, embeddings: Embeddings, dbConfig?: { docstore?: SynchronousInMemoryDocstore }): Promise<HNSWLib>`: Static method to create an instance from texts
+   - `static async fromDocuments(docs: Document[], embeddings: Embeddings, dbConfig?: { docstore?: SynchronousInMemoryDocstore }): Promise<HNSWLib>`: Static method to create an instance from documents
+   - `static async imports(): Promise<{ HierarchicalNSW: typeof HierarchicalNSWT }>`: Static method to import dependencies
+
+## IO Functions
+
+1. **uploadOrUpdateIndexFile(fileUrl: string, options: object)**
+    - Uploads or updates an index file.
+    - `fileUrl`: The URL of the file to upload.
+    - `options`: Configuration options including `uuid`, `description`, `accessKey`, `secret`, `uploadUrl`, and an optional `onProgress` callback.
+
+2. **upsertIndex(lib: HNSWLib, options: object)**
+    - Inserts or updates an index.
+    - `lib`: An instance of the `HNSWLib` class.
+    - `options`: Configuration options including `description`, `public`, `uuid`, `accessKey`, `secret`, and an optional `onProgress` callback.
+  
+3. **getIndex(options: object)**
+    - Retrieves an index.
+    - `options`: Configuration options including `uuid`, `accessKey`, `secret`, `embeddings`, and an optional `onProgress` callback.
+
+## Utilities
+### Constants
+
+1. **`END_POINT`**: A constant string that stores the endpoint URL "https://vector-kv.mega-ug.uk".
+
+### Enumerations
+
+1. **`FileVisibility`**: An enumeration with two values: `Public = 0` and `Private = 1`, used for setting file visibility.
+
+### Functions
+
+1. **`chunkArray<T>(arr: T[], chunkSize: number): T[][]`**
+   - Splits an array into chunks of a given size.
+  
+2. **`encryptToken(object: Record<string, any>, secret: string): Promise<string>`**
+   - Encrypts a JavaScript object into a JWT token with a provided secret. The token has a 1-hour expiration time.
+
+3. **`createUploadFileOperationUrl(options: object): Promise<object>`**
+   - Generates an upload URL and UUID for a file.
+   - `options`: Configuration options including `uuid`, `public`, `description`, `accessKey`, and `secret`.
+
+4. **`createGetFileOperationUrl(options: object): Promise<object>`**
+   - Generates a download URL for a file using its UUID.
+   - `options`: Configuration options including `uuid`, `accessKey`, and `secret`.

@@ -1,0 +1,8 @@
+{
+  "label": "HTTP APIs",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "HTTP API Documentation"
+  }
+}
