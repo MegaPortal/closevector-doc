@@ -350,7 +350,6 @@ export default function SearchBarWrapper(props) {
                     searchChangeCallback(search);
                 }}
                 onChangeOpen={(isOpen) => {
-                    debugger;
                     setOpen(isOpen);
                 }}
                 search={search}
