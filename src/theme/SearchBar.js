@@ -139,7 +139,7 @@ export const useDownloader = function (customEmbeddings) {
         downloading = false;
     };
 
-    useEffect(async () => {
+    useEffect(() => async () => {
         await HNSWLib.imports();
     }, []);
 
