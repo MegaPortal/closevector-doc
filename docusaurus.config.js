@@ -3,18 +3,34 @@
 
 const dotenv = require('dotenv');
 
+let ACCESS_KEY = process.env.CLOSEVECTOR_ACCESS_KEY;
+let SECRET = process.env.CLOSEVECTOR_SECRET;
+let CLOSEVECTOR_FILE_ID = process.env.CLOSEVECTOR_FILE_ID;
+
 dotenv.config();
 dotenv.config({
     path: './.env.local',
     override: true
 });
 
-if (!process.env.CLOSEVECTOR_ACCESS_KEY || !process.env.CLOSEVECTOR_SECRET || !process.env.CLOSEVECTOR_FILE_ID) {
-    console.error('Missing CloseVector credentials. Please set the following environment variables:');
-    console.error('CLOSEVECTOR_ACCESS_KEY, CLOSEVECTOR_SECRET, CLOSEVECTOR_FILE_ID');
-    process.exit(1);
+if (!ACCESS_KEY) {
+    ACCESS_KEY = process.env.CLOSEVECTOR_ACCESS_KEY;
+}
+if (!SECRET) {
+    SECRET = process.env.CLOSEVECTOR_SECRET;
+}
+if (!CLOSEVECTOR_FILE_ID) {
+    CLOSEVECTOR_FILE_ID = process.env.CLOSEVECTOR_FILE_ID;
 }
 
+if (!ACCESS_KEY || !SECRET || !CLOSEVECTOR_FILE_ID) {
+    console.error('Missing CloseVector credentials. Please set the following environment variables:');
+    console.error('CLOSEVECTOR_ACCESS_KEY');
+    console.error('CLOSEVECTOR_SECRET');
+    console.error('CLOSEVECTOR_FILE_ID');
+    process.exit(1);
+}
+    
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
