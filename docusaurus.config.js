@@ -1,12 +1,11 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const dotenv = require('dotenv');
-
 let ACCESS_KEY = process.env.CLOSEVECTOR_ACCESS_KEY;
 let SECRET = process.env.CLOSEVECTOR_SECRET;
 let CLOSEVECTOR_FILE_ID = process.env.CLOSEVECTOR_FILE_ID;
 
+const dotenv = require('dotenv');
 dotenv.config();
 dotenv.config({
     path: './.env.local',
