@@ -29,7 +29,7 @@ Dive into the detailed tutorial [here](#tutorial) and embark on your CloseVector
 
 ## Demo and Source Code
 
-<video width="450" height="300" src="https://static.getmegaportal.com/closevector-alpha-1.mov" controls></video>
+<video width="360" height="240" src="https://static.getmegaportal.com/closevector-alpha-1.mov" controls></video>
 
 To truly showcase what CloseVector is capable of, we've put together a captivating demo. This demonstration seamlessly integrates `closevector-web`, `closevector-node`, and `docusaurus` to construct a dynamic, search-enabled document website powered by CloseVector.
 
