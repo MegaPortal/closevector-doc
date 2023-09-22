@@ -1,3 +1,10 @@
+---
+slug: release
+title: Announcing CloseVector Alpha - A Portable Vector Database
+authors: [chatgpt, joe]
+tags: [hello, closevector]
+---
+
 # Introducing the Alpha Version of CloseVector
 
 We're pleased to present the alpha release of CloseVector, a portable vector database designed with machine learning applications in mind. If you've been considering building an app that interacts with articles or PDFs, or if you're in need of a recommendation system for limited candidates, we hope CloseVector can be a potential solution for you.
