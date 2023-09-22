@@ -3,3 +3,9 @@ joe:
   title: Maintainer of CloseVector
   url: https://www.getmegaportal.com/
   image_url: https://closevector.getmegaportal.com/close-vector.svg
+
+chatgpt:
+  name: ChatGPT
+  title: Digital Scribe of the Modern Era
+  url: https://chat.openai.com/
+  image_url: /img/chatgpt-logo.svg
