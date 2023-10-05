@@ -27,7 +27,7 @@ for more information, checkout [closevector-web](https://www.npmjs.com/package/c
 
 ### Classes
 
-1. **`CloseVectorEmbeddings`**: Extends the `Embeddings` class and adds the following properties and methods:
+1. **`CloseVectorEmbeddings`**:
 
    #### Properties:
    - `batchSize`: Sets the batch size for document embedding (default is 512).
@@ -41,35 +41,51 @@ for more information, checkout [closevector-web](https://www.npmjs.com/package/c
    - `embedQuery(text: string): Promise<number[]>`: Embeds a single query text and returns its embedding.
    - `embeddingWithRetry(textList: string[]): Promise<any>`: Handles embedding with retries and authorization.
 
-## HNSWLib
+## CloseVectorHNSWWeb
 
 ### Interfaces
 
-1. **`HNSWLibBase`**: Describes the basic parameters for HNSWLib, including:
-    - `space`: Type `SpaceName`
+1. **`CloseVectorHNSWLibBase`**: Describes the basic parameters for HNSWLib, including:
+    - `space`: Type `string`
     - `maxElements`: Type `number`
     - `numDimensions`: Type `number`, optional
 
-2. **`HNSWLibArgs`**: Extends `HNSWLibBase` with:
+2. **`CloseVectorHNSWLibArgs`**: Extends `CloseVectorHNSWLibBase` with:
     - `docstore`: Type `SynchronousInMemoryDocstore`, optional
-    - `index`: Type `TypeOfHierarchicalNSW`, optional
+    - `index`: Type `HierarchicalNSWT`, optional
 
 ### Classes
 
-1. **`HNSWLib`**: Extends `SaveableVectorStore`.
+1. **`CloseVectorHNSWWeb`**: Extends `CloseVectorSaveableVectorStore`.
     - **Methods**:
-        - `constructor(embeddings: Embeddings, args: HNSWLibArgs)`: Initializes a new instance.
-        - `addDocuments(documents: Document[]): Promise<void>`: Adds new documents to the docstore and index.
-        - `addVectors(vectors: number[][], documents: Document[])`: Adds vectors and metadata to the index and docstore.
-        - `similaritySearchVectorWithScore(query: number[], k: number, filter?: this['FilterType'])`: Searches the vector store.
+        - `constructor(embeddings: CloseVectorEmbeddings, args: CloseVectorHNSWLibArgs)`: Initializes a new instance.
+        - `addDocuments(documents: CloseVectorDocument[]): Promise<void>`: Adds new documents to the docstore and index.
+        - `addVectors(vectors: number[][], documents: CloseVectorDocument[])`: Adds vectors and metadata to the index and docstore.
+        - `similaritySearchVectorWithScore(query: number[], k: number, filter?: this['FilterType'])`: Searches the vector store and returns documents along with their scores.
         - `save(directory: string)`: Saves the index, docstore, and args to disk.
+        - `saveToCloud(options: Omit<Parameters<typeof upload>[0], 'path'>)`: Saves the index, docstore, and args to the cloud.
         
     - **Static Methods**:
-        - `static async getHierarchicalNSW(args: HNSWLibBase)`: Returns a HierarchicalNSW instance.
-        - `static async load(directory: string, embeddings: Embeddings)`: Loads a pre-existing vector store.
-        - `static async fromTexts(texts: string[], metadatas: object[] | object, embeddings: Embeddings, dbConfig?: { docstore?: SynchronousInMemoryDocstore; }): Promise<HNSWLib>`: Creates an instance from text documents.
-        - `static async fromDocuments(docs: Document[], embeddings: Embeddings, dbConfig?: { docstore?: SynchronousInMemoryDocstore; }): Promise<HNSWLib>`: Creates an instance from Document objects.
+        - `static async getHierarchicalNSW(args: CloseVectorHNSWLibBase)`: Returns a HierarchicalNSW instance.
+        - `static async load(directory: string, embeddings: CloseVectorEmbeddings)`: Loads a pre-existing vector store from disk.
+        - `static async loadFromCloud(options: Parameters<typeof download>[0] & { uuid: string, embeddings: CloseVectorEmbeddings })`: Loads a pre-existing vector store from the cloud.
+        - `static async fromTexts(texts: string[], metadatas: object[] | object, embeddings: CloseVectorEmbeddings, dbConfig?: { docstore?: SynchronousInMemoryDocstore; }): Promise<CloseVectorHNSWWeb>`: Creates an instance from text documents.
+        - `static async fromDocuments(docs: CloseVectorDocument[], embeddings: CloseVectorEmbeddings, dbConfig?: { docstore?: SynchronousInMemoryDocstore; }): Promise<CloseVectorHNSWWeb>`: Creates an instance from Document objects.
         - `static async imports(): Promise<HnswlibModule>`: Imports the hnswlib-wasm library.
+
+### Additional Exports
+
+- **`HNSWLib`**: Alias for `CloseVectorHNSWWeb`.
+- **`HierarchicalNSWT`**: Type export from 'closevector-hnswlib-wasm'.
+- **`HnswlibModule`**: Type export.
+- Various exports from 'closevector-common' including:
+    - `CloseVectorEmbeddings`
+    - `CloseVectorHNSWLibArgs`
+    - `CloseVectorSaveableVectorStore`
+    - `CloseVectorDocument`
+    - `SynchronousInMemoryDocstore`
+    - `CloseVectorHNSWLibBase`
+    - `CloseVectorCredentials`
 
 ## IO Functions
 
