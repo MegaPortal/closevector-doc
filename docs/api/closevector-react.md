@@ -1,4 +1,8 @@
-# closevector-react
+---
+sidebar_position: 3
+---
+
+# CloseVector React
 
 This React hook provides an easy integration with the `CloseVectorManager` from the `closevector-web` package. With this hook, you can easily initialize and manage the CloseVector instance and apply it to your React application.
 
