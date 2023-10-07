@@ -116,3 +116,56 @@ for more information, checkout [closevector-web](https://www.npmjs.com/package/c
   - `getBufferFromFile(path: string)`: Fetches a buffer from a file.
   - `getStringFromFile(path: string)`: Fetches a string from a file.
   - `writeFs()`: Synchronizes the filesystem.
+
+## CloseVectorManager
+
+### Overview
+
+The `CloseVectorManager` class provides methods for managing CloseVector embeddings and interfacing with the CloseVector HNSW Web library.
+
+### Imports
+
+- **CloseVectorHNSWWeb**: Used for creating and loading HNSW indexes.
+- **download**: A helper function for downloading resources.
+- **CloseVectorEmbeddings, CloseVectorDocument**: Common structures and types used in CloseVector.
+- **createPublicGetFileOperationUrl**: Helper function to create URLs for public file operations.
+- **CloseVectorFreeEmbeddings**: Represents free embeddings provided by CloseVector.
+
+### Type Definitions
+
+- **TypeOfOnProgress**: Represents the type definition for the `onProgress` parameter in the `download` function.
+- **TypeOfFileUrlCreator**: Represents the type definition for creating URLs.
+- **TypeOfCreateLib**: Represents the type definition for the second constructor parameter of `CloseVectorHNSWWeb`.
+
+### Class: CloseVectorManager
+
+#### Properties
+
+- **accessKey**: Optional access key string used for downloading the CloseVector database.
+- **uuid**: Optional UUID string.
+- **customEmbeddings**: Optional custom embeddings of type `CloseVectorEmbeddings`.
+- **lib**: Represents an instance of `CloseVectorHNSWWeb` or null.
+- **urlCreator**: Represents a custom URL creator function or null.
+- **onProgress**: Represents a progress callback function for downloading or null.
+
+#### Constructor
+
+The constructor takes an `options` object with the following properties:
+
+- **accessKey**: Optional string for downloading the CloseVector database.
+- **uuid**: Optional string.
+- **customEmbeddings**: Optional custom embeddings of type `CloseVectorEmbeddings`.
+- **fileUrlCreator**: Optional custom URL creator function.
+- **onProgress**: Optional progress callback function for downloading.
+
+#### Methods
+
+- **loadFromCloud()**: Asynchronously downloads the CloseVector database from the cloud and loads it.
+- **createNewCloseVector(args: Partial<TypeOfCreateLib\>)**: Asynchronously creates a new `CloseVectorHNSWWeb` instance with given arguments.
+- **fromDocuments(documents: CloseVectorDocument[])**: Asynchronously creates a `CloseVectorHNSWWeb` instance from the given documents.
+- **fromTexts(texts: string[], metadatas: object[] | object)**: Asynchronously creates a `CloseVectorHNSWWeb` instance from the given texts and associated metadata.
+
+### Notes
+
+- Proper error handling is in place to ensure the required parameters are provided before making operations.
+- If `customEmbeddings` is not provided, it defaults to using free embeddings from `CloseVectorFreeEmbeddings`.
