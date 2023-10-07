@@ -45,4 +45,4 @@ The `useCloseVectorManager` hook initializes and manages the instance of `CloseV
 
 ## License
 
-[MIT](LICENSE)
+MIT
