@@ -2,7 +2,7 @@
 sidebar_position: 2
 ---
 
-# Closevector Node
+# CloseVector Node
 
 `closevector-node` is a Node.js library, which means it is designed to be used with Node.js applications. It provides functionality for embedding texts, adding documents and vectors, performing similarity searches, and other operations related to CloseVector. Additionally, it offers IO functions for uploading, updating, and retrieving indices, as well as various utility functions and constants.
 
